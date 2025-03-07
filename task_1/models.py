@@ -3,10 +3,10 @@ from database import Base
 
 
 
-class EmployseeOrm(Base):
-    __tablename__ = "employsees"
+class EmployeesOrm(Base):
+    __tablename__ = "employees"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    position = Column(String, unique=True, index=True)
-    salary = Column(String)
+    position = Column(String, index=True)
+    salary = Column(Integer)
