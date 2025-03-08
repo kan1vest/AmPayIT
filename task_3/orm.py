@@ -1,6 +1,7 @@
 
+import datetime
 from os import name
-from sqlalchemy import delete, func, select, true
+from sqlalchemy import and_, delete, func, select, true
 from database import Base, async_engine, async_session_factory
 from models import OrdersOrm
 
@@ -39,6 +40,30 @@ class AsyncORM:
             print("Максимальная сумма заказа:", max(result, key=lambda x: x[1])[1])
 
 
+    @staticmethod
+    async def select_order_date(year = 2023):
+        async with async_session_factory() as session:
+            query = select(OrdersOrm.id).where(
+                and_(
+                    (OrdersOrm.order_date >= datetime.datetime(year, 1, 1)),
+                    (OrdersOrm.order_date <= datetime.datetime(year, 12, 31))
+                )
+            )
+            res = await session.execute(query)
+            result = res.fetchall()
+            if result:
+                print(len(result), f"заказов за {year} год")
+            else:
+                print(f"Заказов за {year} год нет")
+
+    @staticmethod
+    async def select_order_amount_average_for_client():
+        async with async_session_factory() as session:
+            query = select(OrdersOrm.customer_id, func.avg(OrdersOrm.amount)).group_by(OrdersOrm.customer_id)
+            res = await session.execute(query)
+            result = res.fetchall()
+            for record in reversed(result): 
+                print("Клиент:", record[0],",Средняя сумма заказа:", record[1])
         
 
         
