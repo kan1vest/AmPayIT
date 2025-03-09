@@ -8,5 +8,5 @@ class EmployeesOrm(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    position = Column(String, index=True)
+    position = Column(String)
     salary = Column(Integer)
